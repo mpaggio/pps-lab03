@@ -100,9 +100,9 @@ object Sequences: // Essentially, generic linkedlists
     def flatMapTailRec[A, B](s: Sequence[A])(mapper: A => Sequence[B]): Sequence[B] =
       @annotation.tailrec
       def flatMapRec(s: Sequence[A])(acc: Sequence[B]): Sequence[B] = s match
-        case Cons(h,t) => flatMapRec(t)(concatTailRec(mapper(h),acc))
+        case Cons(h,t) => flatMapRec(t)(concatTailRec(acc,mapper(h)))
         case _ => acc
-      reverse(flatMapRec(s)(Nil()))
+      flatMapRec(s)(Nil())
 
     /*
      * Get the minimum element in the sequence
