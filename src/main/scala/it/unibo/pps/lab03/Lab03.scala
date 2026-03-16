@@ -1,6 +1,6 @@
-package it.unibo.pps.lab
+package it.unibo.pps.lab03
 
-object LabRun {
+object Lab03 extends App {
   enum Stream[A]:
     case Empty()
     case Cons(head: () => A, tail: () => Stream[A])
