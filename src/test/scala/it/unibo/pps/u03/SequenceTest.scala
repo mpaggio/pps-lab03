@@ -35,10 +35,22 @@ class SequenceTest:
     assertEquals(Nil(), zip(Nil(), l2))
     assertEquals(Nil(), zip(Nil(), Nil()))
 
+  @Test def testZipTailRec() =
+    val l2: Sequence[String] = Cons("10", Cons("20", Cons("30", Nil())))
+    assertEquals(Cons((10, "10"), Cons((20, "20"), Cons((30, "30"), Nil()))), zipTailRec(sequence, l2))
+    assertEquals(Nil(), zipTailRec(sequence, Nil()))
+    assertEquals(Nil(), zipTailRec(Nil(), l2))
+    assertEquals(Nil(), zipTailRec(Nil(), Nil()))
+
   @Test def testConcat() =
     val l2: Sequence[Int] = Cons(40, Cons(50, Nil()))
     assertEquals(Cons(10, Cons(20, Cons(30, Cons(40, Cons(50, Nil()))))), concat(sequence, l2))
     assertEquals(Cons(40, Cons(50, Nil())), concat(Nil(), l2))
+
+  @Test def testConcatTailRec() =
+    val l2: Sequence[Int] = Cons(40, Cons(50, Nil()))
+    assertEquals(Cons(10, Cons(20, Cons(30, Cons(40, Cons(50, Nil()))))), concatTailRec(sequence, l2))
+    assertEquals(Cons(40, Cons(50, Nil())), concatTailRec(Nil(), l2))
 
   @Test def testReverse() =
     assertEquals(Cons(30, Cons(20, Cons(10, Nil()))), reverse(sequence))
@@ -47,6 +59,10 @@ class SequenceTest:
   @Test def testFlatMap() =
     assertEquals(Cons(11, Cons(21, Cons(31, Nil()))), flatMap(sequence)(v => Cons(v + 1, Nil())))
     assertEquals(Nil(), flatMap(Nil())(v => Cons(v, Nil())))
+
+  @Test def testFlatMapTailRec() =
+    assertEquals(Cons(11, Cons(21, Cons(31, Nil()))), flatMapTailRec(sequence)(v => Cons(v + 1, Nil())))
+    assertEquals(Nil(), flatMapTailRec(Nil())(v => Cons(v, Nil())))
 
   @Test def testMin() =
     assertEquals(Just(10), min(sequence))
