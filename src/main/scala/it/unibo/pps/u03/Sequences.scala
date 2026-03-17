@@ -109,28 +109,49 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [30, 20, 10] => 10
      * E.g., [10, 1, 30] => 1
      */
-    def min(s: Sequence[Int]): Optional[Int] = ???
+    def min(s: Sequence[Int]): Optional[Int] =
+      @annotation.tailrec
+      def minRec(s: Sequence[Int], min: Optional[Int]): Optional[Int] = (s,min) match
+        case (Cons(h,t), Optional.Just(a)) if a < h => minRec(t, Optional.Just(a))
+        case (Cons(h,t), _) => minRec(t, Optional.Just(h))
+        case _ => min
+      minRec(s, Optional.Empty())
 
     /*
      * Get the elements at even indices
      * E.g., [10, 20, 30] => [10, 30]
      * E.g., [10, 20, 30, 40] => [10, 30]
      */
-    def evenIndices[A](s: Sequence[A]): Sequence[A] = ???
+    def evenIndices[A](s: Sequence[A]): Sequence[A] =
+      @annotation.tailrec
+      def even(s: Sequence[A], acc: Sequence[A], counter: Int): Sequence[A] = s match
+        case Cons(h,t) if counter%2 == 0 => even(t, concatTailRec(acc, Cons(h, Nil())), counter+1)
+        case Cons(_,t) => even(t, acc, counter+1)
+        case _ => acc
+      even(s, Nil(), 0)
 
     /*
      * Check if the sequence contains the element
      * E.g., [10, 20, 30] => true if elem is 20
      * E.g., [10, 20, 30] => false if elem is 40
      */
-    def contains[A](s: Sequence[A])(elem: A): Boolean = ???
+    @annotation.tailrec
+    def contains[A](s: Sequence[A])(elem: A): Boolean = s match
+      case Nil() => false
+      case Cons(h,t) if h != elem => contains(t)(elem)
+      case _ => true
 
     /*
      * Remove duplicates from the sequence
      * E.g., [10, 20, 10, 30] => [10, 20, 30]
      * E.g., [10, 20, 30] => [10, 20, 30]
      */
-    def distinct[A](s: Sequence[A]): Sequence[A] = ???
+    def distinct[A](s: Sequence[A]): Sequence[A] =
+      @annotation.tailrec
+      def remove(s: Sequence[A], found: Sequence[A]): Sequence[A] = s match
+        case Cons(h,t) if !contains(found)(h) => remove(t,concatTailRec(found, Cons(h, Nil())))
+        case _ => found
+      remove(s, Nil())
 
     /*
      * Group contiguous elements in the sequence
@@ -138,14 +159,29 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 30] => [[10], [20], [30]]
      * E.g., [10, 20, 20, 30] => [[10], [20, 20], [30]]
      */
-    def group[A](s: Sequence[A]): Sequence[Sequence[A]] = ???
+    def group[A](s: Sequence[A]): Sequence[Sequence[A]] =
+      @annotation.tailrec
+      def search(s: Sequence[A], last: Sequence[A], acc: Sequence[Sequence[A]]):Sequence[Sequence[A]] = (s, last) match
+        case (Nil(), Nil()) => Nil()
+        case (Cons(head,tail), Nil()) => search(tail, Cons(head, Nil()), acc)
+        case (Cons(head,tail), Cons(lastHead,_)) if head == lastHead =>
+          search(tail, concatTailRec(last, Cons(head, Nil())), acc)
+        case (Cons(head,tail), _) => search(tail, Cons(head, Nil()), Cons(last, acc))
+        case (_, _) => reverse(Cons(last, acc))
+      search(s, Nil(), Nil())
 
     /*
      * Partition the sequence into two sequences based on the predicate
      * E.g., [10, 20, 30] => ([10], [20, 30]) if pred is (_ < 20)
      * E.g., [11, 20, 31] => ([20], [11, 31]) if pred is (_ % 2 == 0)
      */
-    def partition[A](s: Sequence[A])(pred: A => Boolean): (Sequence[A], Sequence[A]) = ???
+    def partition[A](s: Sequence[A])(pred: A => Boolean): (Sequence[A], Sequence[A]) =
+      @annotation.tailrec
+      def part(s: Sequence[A], first: Sequence[A], second: Sequence[A]): (Sequence[A], Sequence[A]) = s match
+        case Cons(h,t) if pred(h) => part(t, Cons(h,first), second)
+        case Cons(h,t) => part(t, first, Cons(h,second))
+        case _ => (reverse(first), reverse(second))
+      part(s, Nil(), Nil())
 
 @main def trySequences =
   import Sequences.* 

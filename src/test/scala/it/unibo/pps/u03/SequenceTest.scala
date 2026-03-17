@@ -56,34 +56,34 @@ class SequenceTest:
     assertEquals(Cons(30, Cons(20, Cons(10, Nil()))), reverse(sequence))
     assertEquals(Nil(), reverse(Nil()))
 
-  @Test def testFlatMap() =
+  @Test def testFlatMap(): Unit =
     assertEquals(Cons(11, Cons(21, Cons(31, Nil()))), flatMap(sequence)(v => Cons(v + 1, Nil())))
     assertEquals(Nil(), flatMap(Nil())(v => Cons(v, Nil())))
 
-  @Test def testFlatMapTailRec() =
+  @Test def testFlatMapTailRec(): Unit =
     assertEquals(Cons(11, Cons(10, Cons(21, Cons(20, Cons(31, Cons(30, Nil())))))), flatMapTailRec(sequence)(v => Cons(v + 1, Cons(v, Nil()))))
     assertEquals(Nil(), flatMapTailRec(Nil())(v => Cons(v, Nil())))
 
-  @Test def testMin() =
+  @Test def testMin(): Unit =
     assertEquals(Just(10), min(sequence))
     assertEquals(Just(1), min(Cons(1, Nil())))
     assertEquals(Empty(), min(Nil()))
 
-  @Test def testEvenIndices() =
+  @Test def testEvenIndices(): Unit =
     assertEquals(Cons(10, Cons(30, Nil())), evenIndices(sequence))
     assertEquals(Nil(), evenIndices(Nil()))
 
-  @Test def testContains() =
+  @Test def testContains(): Unit =
     assertEquals(true, contains(sequence)(10))
     assertEquals(false, contains(sequence)(15))
     assertEquals(false, contains(Nil())(10))
 
-  @Test def testDistinct() =
+  @Test def testDistinct(): Unit =
     assertEquals(Cons(10, Cons(20, Cons(30, Nil()))), distinct(sequence))
     assertEquals(Cons(10, Cons(20, Nil())), distinct(Cons(10, Cons(20, Cons(10, Nil())))))
     assertEquals(Nil(), distinct(Nil()))
 
-  @Test def testGroup() =
+  @Test def testGroup(): Unit =
     val sequence = Cons(10, Cons(10, Cons(20, Cons(30, Cons(20, Nil())))))
     val grouped =
       Cons(Cons(10, Cons(10, Nil())), Cons(Cons(20, Nil()), Cons(Cons(30, Nil()), Cons(Cons(20, Nil()), Nil()))))
