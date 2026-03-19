@@ -164,6 +164,10 @@ object Lab03 extends App {
         case Cons(h, t) => Sequence.Cons(h(), toList(t()))
         case _ => Sequence.Nil()
 
+      def fromList[A](sequence: Sequence[A]): Stream[A] = sequence match
+        case Sequence.Cons(h, t) => cons(h, fromList(t))
+        case _ => Empty()
+
       def map[A, B](stream: Stream[A])(f: A => B): Stream[B] = stream match
         case Cons(head, tail) => cons(f(head()), map(tail())(f))
         case _ => Empty()
@@ -192,5 +196,17 @@ object Lab03 extends App {
           cons(first, fib(second, first + second))
         fib(0,1)
 
+      def interleave[A](s1: Stream[A], s2: Stream[A]): Stream[A] = (s1,s2) match
+        case (Cons(h1,t1), Cons(h2,t2)) => cons(h1(), interleave(s2, t1()))
+        case (Cons(h,t), Empty()) => cons(h(),t())
+        case (Empty(), Cons(h,t)) => cons(h(),t())
+        case (_, _) => Empty()
 
+      def cycle[A](lst: Sequence[A]): Stream[A] = lst match
+        case Nil() => Empty()
+        case _ =>
+          def repeat(sequence: Sequence[A]): Stream[A] = sequence match
+            case Sequence.Cons(h, t) => cons(h, repeat(t))
+            case _ => repeat(lst)
+          repeat(lst)
 }

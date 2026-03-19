@@ -184,3 +184,32 @@ object Lab03Test:
     @Test
     def testFibonacci(): Unit =
       assertEquals(Cons(0, Cons(1, Cons(1, Cons(2, Cons(3, Nil()))))), Stream.toList(Stream.take(fibonacci())(5)))
+
+    @Test
+    def testInterleave(): Unit =
+      val s1 = Stream.fromList(Cons(1, Cons(3, Cons(5, Nil()))))
+      val s2 = Stream.fromList(Cons(2, Cons(4, Cons(6, Cons(8, Cons(10, Nil()))))))
+      assertEquals(Cons (1, Cons(2, Cons(3, Cons(4, Cons(5, Cons(6, Cons(8, Cons(10, Nil())))))))), Stream.toList(Stream.interleave(s1, s2)))
+
+    @Test
+    def testInterleaveWithOneEmpty(): Unit =
+      val s1: Stream[Int] = Stream.fromList(Nil())
+      val s2: Stream[Int] = Stream.fromList(Cons(2, Cons(4, Cons(6, Cons(8, Cons(10, Nil()))))))
+      assertEquals(Cons(2, Cons(4, Cons(6, Cons(8, Cons(10, Nil()))))), Stream.toList(Stream.interleave(s1, s2)))
+      assertEquals(Cons(2, Cons(4, Cons(6, Cons(8, Cons(10, Nil()))))), Stream.toList(Stream.interleave(s2, s1)))
+
+    @Test
+    def testInterleaveWithBothEmpty(): Unit =
+      val s1: Stream[Int] = Stream.fromList(Nil())
+      val s2: Stream[Int] = Stream.fromList(Nil())
+      assertEquals(Nil(), Stream.toList(Stream.interleave(s1, s2)))
+
+    @Test
+    def testCycle(): Unit =
+      val repeat = cycle(Cons("a", Cons("b", Cons("c", Nil()))))
+      assertEquals(Cons("a", Cons("b", Cons("c", Cons("a", Cons("b", Nil()))))), Stream.toList(Stream.take(repeat)(5)))
+
+    @Test
+    def testCycleEmpty(): Unit =
+      val repeat = cycle(Nil())
+      assertEquals(Nil(), Stream.toList(Stream.take(repeat)(5)))
