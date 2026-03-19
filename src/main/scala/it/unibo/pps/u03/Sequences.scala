@@ -150,6 +150,7 @@ object Sequences: // Essentially, generic linkedlists
       @annotation.tailrec
       def remove(s: Sequence[A], found: Sequence[A]): Sequence[A] = s match
         case Cons(h,t) if !contains(found)(h) => remove(t,concatTailRec(found, Cons(h, Nil())))
+        case Cons(_, t) => remove(t, found)
         case _ => found
       remove(s, Nil())
 

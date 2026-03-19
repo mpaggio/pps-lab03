@@ -90,7 +90,7 @@ class SequenceTest:
     assertEquals(group(sequence), grouped)
     assertEquals(Nil(), group(Nil()))
 
-  @Test def testPartition() =
+  @Test def testPartition(): Unit =
     val sequence = Cons(11, Cons(20, Cons(31, Nil())))
     val (even, odd) = partition(sequence)(x => x % 2 == 0)
     assertEquals(Cons(20, Nil()), even)

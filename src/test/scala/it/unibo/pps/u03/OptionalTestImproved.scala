@@ -14,16 +14,16 @@ class OptionTestImproved:
   val optSome = Just(optVal)
   val optNone = Empty()
 
-  @Test def testEmpty() =
+  @Test def testEmpty(): Unit =
     assertFalse(isEmpty(optSome))
     assertTrue(isEmpty(optNone))
 
-  @Test def testOrElse() =
+  @Test def testOrElse(): Unit =
     val otherVal = 10
     assertEquals(optVal, orElse(optSome, otherVal))
     assertEquals(otherVal, orElse(optNone, otherVal))
 
-  @Test def testMap() =
+  @Test def testMap(): Unit =
     assertEquals(Just(optVal + 1), map(optSome)(_ + 1))
     assertEquals(Just("val: " + optVal), map(optSome)(v => "val: " + v))
     assertEquals(Empty(), map(optNone)(v => "val: " + v))
